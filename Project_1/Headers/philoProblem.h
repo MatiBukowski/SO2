@@ -6,6 +6,10 @@
 #define PHILOPROBLEM_H
 
 void startup();
-void take_fork();
+// void philosopher_activity(int);
+// bool take_fork(int, int);
+// void put_fork(int, int);
+// void thinking(int);
+// void eating(int);
 
 #endif //PHILOPROBLEM_H

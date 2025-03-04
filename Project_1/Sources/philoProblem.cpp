@@ -5,13 +5,19 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
+#include <mutex>
 #include "philoProblem.h"
 
 using namespace std;
 
 void philosopher_activity(int);
-void take_fork(int, int);
+bool take_fork(int, int);
+void put_fork(int, int);
 void thinking(int);
+void eating(int);
+void display_philosophers_activity();
+
+mutex display_mutex;
 
 #define N 5
 
@@ -50,23 +56,68 @@ void philosopher_activity(int philosopher_id) {
     while(true) {
         thinking(philosopher_id);
 
-        take_fork(philosopher_id, left_fork_id);                // take left fork
-        take_fork(philosopher_id, right_fork_id);               // take right fork
+        bool tf_l = take_fork(philosopher_id, left_fork_id);                // take left fork
 
+        if (tf_l) {
+            bool tf_r = take_fork(philosopher_id, right_fork_id);               // take right fork
+
+            if(tf_r) {                                                      // if philosopher took left and right fork
+                eating(philosopher_id);
+                philosophers_state[philosopher_id-1] = "eating";
+
+                display_mutex.lock();
+                system("cls");
+                display_philosophers_activity();
+                display_mutex.unlock();
+
+                put_fork(philosopher_id, left_fork_id);
+                put_fork(philosopher_id, right_fork_id);
+                philosophers_state[philosopher_id-1] = "thinking";
+
+                display_mutex.lock();
+                system("cls");
+                display_philosophers_activity();
+                display_mutex.unlock();
+            }
+
+        } else {
+            put_fork(philosopher_id, left_fork_id);
+        }
 
     }
 }
 
-void take_fork(int philosopher_id, int fork_id) {
+bool take_fork(int philosopher_id, int fork_id) {
     if(forks[fork_id] == 1) {
         forks[fork_id] = 0;
-        cout << philosopher_id << " philosopher took " << fork_id << " fork" << endl;
+        // cout << philosopher_id << " philosopher took " << fork_id << " fork" << endl;
+        this_thread::sleep_for(chrono::milliseconds(500));
+        return true;
+    }
+    return false;
+}
+
+void put_fork(int philosopher_id, int fork_id) {
+    if(forks[fork_id] == 0) {
+        forks[fork_id] = 1;
+        // cout << philosopher_id << " philosopher put back " << fork_id << " fork" << endl;
         this_thread::sleep_for(chrono::milliseconds(500));
     }
-
 }
 
 void thinking(int philosopher_id) {
-    cout << philosopher_id << " philosopher is thinking" << endl;
+    // cout << philosopher_id << " philosopher is thinking" << endl;
     this_thread::sleep_for(chrono::milliseconds(1000));
+}
+
+void eating(int philosopher_id) {
+    // cout << philosopher_id << " philosopher is eating" << endl;
+    this_thread::sleep_for(chrono::milliseconds(1000));
+}
+
+void display_philosophers_activity() {
+
+    for(int i = 0; i < N; i++) {
+        cout << philosophers_id[i] << " philosopher is " << philosophers_state[i] << endl;
+    }
 }
