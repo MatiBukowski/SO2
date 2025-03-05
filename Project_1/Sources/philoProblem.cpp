@@ -6,6 +6,7 @@
 #include <thread>
 #include <chrono>
 #include <mutex>
+#include <semaphore>
 #include "philoProblem.h"
 
 using namespace std;
@@ -27,19 +28,11 @@ string philosophers_state[5];
 thread philosophers[5];
 
 void startup() {
-    for(int& fork : forks) {
-        fork = 1;
-    }
 
     for(int i = 0; i < N; i++) {
+        forks[i] = 1;
         philosophers_id[i] = i+1;
-    }
-
-    for(string& philosopher_state : philosophers_state) {
-        philosopher_state = "thinking";
-    }
-
-    for(int i = 0; i < N; i++) {
+        philosophers_state[i] = "thinking";
         philosophers[i] = thread(philosopher_activity, i+1);
     }
 
@@ -56,28 +49,29 @@ void philosopher_activity(int philosopher_id) {
     while(true) {
         thinking(philosopher_id);
 
-        bool tf_l = take_fork(philosopher_id, left_fork_id);                // take left fork
+        bool tf_l = take_fork(philosopher_id, left_fork_id);                    // take left fork
 
         if (tf_l) {
             bool tf_r = take_fork(philosopher_id, right_fork_id);               // take right fork
 
-            if(tf_r) {                                                      // if philosopher took left and right fork
-                eating(philosopher_id);
+            if(tf_r) {                                                          // if philosopher took left and right fork
                 philosophers_state[philosopher_id-1] = "eating";
-
-                display_mutex.lock();
+                cout << "Tak" << endl;
+                // display_mutex.lock();
                 system("cls");
                 display_philosophers_activity();
-                display_mutex.unlock();
+                // display_mutex.unlock();
+                eating(philosopher_id);
 
                 put_fork(philosopher_id, left_fork_id);
                 put_fork(philosopher_id, right_fork_id);
                 philosophers_state[philosopher_id-1] = "thinking";
 
-                display_mutex.lock();
+                // display_mutex.lock();
                 system("cls");
                 display_philosophers_activity();
-                display_mutex.unlock();
+                // display_mutex.unlock();
+                thinking(philosopher_id);
             }
 
         } else {

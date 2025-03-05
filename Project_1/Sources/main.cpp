@@ -4,13 +4,14 @@
 #include <iostream>
 #include <conio.h>
 #include "philoProblem.h"
+#include "philoProblem2.h"
 
 using namespace std;
 
 int main()                  // głowna funkcja programu
 {
 
-    startup();
+    startup2();
 
     getch();
     return 0;
