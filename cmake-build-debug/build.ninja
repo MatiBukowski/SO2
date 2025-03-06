@@ -52,21 +52,21 @@ build cmake_object_order_depends_target_SO2_P1: phony || .
 build CMakeFiles/SO2_P1.dir/Project_1/Sources/main.cpp.obj: CXX_COMPILER__SO2_P1_unscanned_Debug C$:/Users/mateu/CLionProjects/SO2/Project_1/Sources/main.cpp || cmake_object_order_depends_target_SO2_P1
   DEP_FILE = CMakeFiles\SO2_P1.dir\Project_1\Sources\main.cpp.obj.d
   FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
-  INCLUDES = -IC:/Users/mateu/CLionProjects/SO2/Project_1/Headers
+  INCLUDES = -IC:/Users/mateu/CLionProjects/SO2/Project_1/Headers -IC:/Users/mateu/CLionProjects/SO2/Project_2/Headers
   OBJECT_DIR = CMakeFiles\SO2_P1.dir
   OBJECT_FILE_DIR = CMakeFiles\SO2_P1.dir\Project_1\Sources
 
 build CMakeFiles/SO2_P1.dir/Project_1/Sources/philoProblem.cpp.obj: CXX_COMPILER__SO2_P1_unscanned_Debug C$:/Users/mateu/CLionProjects/SO2/Project_1/Sources/philoProblem.cpp || cmake_object_order_depends_target_SO2_P1
   DEP_FILE = CMakeFiles\SO2_P1.dir\Project_1\Sources\philoProblem.cpp.obj.d
   FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
-  INCLUDES = -IC:/Users/mateu/CLionProjects/SO2/Project_1/Headers
+  INCLUDES = -IC:/Users/mateu/CLionProjects/SO2/Project_1/Headers -IC:/Users/mateu/CLionProjects/SO2/Project_2/Headers
   OBJECT_DIR = CMakeFiles\SO2_P1.dir
   OBJECT_FILE_DIR = CMakeFiles\SO2_P1.dir\Project_1\Sources
 
 build CMakeFiles/SO2_P1.dir/Project_1/Sources/philoProblem2.cpp.obj: CXX_COMPILER__SO2_P1_unscanned_Debug C$:/Users/mateu/CLionProjects/SO2/Project_1/Sources/philoProblem2.cpp || cmake_object_order_depends_target_SO2_P1
   DEP_FILE = CMakeFiles\SO2_P1.dir\Project_1\Sources\philoProblem2.cpp.obj.d
   FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
-  INCLUDES = -IC:/Users/mateu/CLionProjects/SO2/Project_1/Headers
+  INCLUDES = -IC:/Users/mateu/CLionProjects/SO2/Project_1/Headers -IC:/Users/mateu/CLionProjects/SO2/Project_2/Headers
   OBJECT_DIR = CMakeFiles\SO2_P1.dir
   OBJECT_FILE_DIR = CMakeFiles\SO2_P1.dir\Project_1\Sources
 
@@ -97,12 +97,19 @@ build SO2_P1.exe: CXX_EXECUTABLE_LINKER__SO2_P1_Debug CMakeFiles/SO2_P1.dir/Proj
 
 build cmake_object_order_depends_target_SO2_P2: phony || .
 
-build CMakeFiles/SO2_P2.dir/Project_2/main2.cpp.obj: CXX_COMPILER__SO2_P2_unscanned_Debug C$:/Users/mateu/CLionProjects/SO2/Project_2/main2.cpp || cmake_object_order_depends_target_SO2_P2
-  DEP_FILE = CMakeFiles\SO2_P2.dir\Project_2\main2.cpp.obj.d
+build CMakeFiles/SO2_P2.dir/Project_2/Sources/main2.cpp.obj: CXX_COMPILER__SO2_P2_unscanned_Debug C$:/Users/mateu/CLionProjects/SO2/Project_2/Sources/main2.cpp || cmake_object_order_depends_target_SO2_P2
+  DEP_FILE = CMakeFiles\SO2_P2.dir\Project_2\Sources\main2.cpp.obj.d
   FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
-  INCLUDES = -IC:/Users/mateu/CLionProjects/SO2/Project_1/Headers
+  INCLUDES = -IC:/Users/mateu/CLionProjects/SO2/Project_1/Headers -IC:/Users/mateu/CLionProjects/SO2/Project_2/Headers
   OBJECT_DIR = CMakeFiles\SO2_P2.dir
-  OBJECT_FILE_DIR = CMakeFiles\SO2_P2.dir\Project_2
+  OBJECT_FILE_DIR = CMakeFiles\SO2_P2.dir\Project_2\Sources
+
+build CMakeFiles/SO2_P2.dir/Project_2/Sources/connection.cpp.obj: CXX_COMPILER__SO2_P2_unscanned_Debug C$:/Users/mateu/CLionProjects/SO2/Project_2/Sources/connection.cpp || cmake_object_order_depends_target_SO2_P2
+  DEP_FILE = CMakeFiles\SO2_P2.dir\Project_2\Sources\connection.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/mateu/CLionProjects/SO2/Project_1/Headers -IC:/Users/mateu/CLionProjects/SO2/Project_2/Headers
+  OBJECT_DIR = CMakeFiles\SO2_P2.dir
+  OBJECT_FILE_DIR = CMakeFiles\SO2_P2.dir\Project_2\Sources
 
 
 # =============================================================================
@@ -112,9 +119,9 @@ build CMakeFiles/SO2_P2.dir/Project_2/main2.cpp.obj: CXX_COMPILER__SO2_P2_unscan
 #############################################
 # Link the executable SO2_P2.exe
 
-build SO2_P2.exe: CXX_EXECUTABLE_LINKER__SO2_P2_Debug CMakeFiles/SO2_P2.dir/Project_2/main2.cpp.obj
+build SO2_P2.exe: CXX_EXECUTABLE_LINKER__SO2_P2_Debug CMakeFiles/SO2_P2.dir/Project_2/Sources/main2.cpp.obj CMakeFiles/SO2_P2.dir/Project_2/Sources/connection.cpp.obj
   FLAGS = -g
-  LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
+  LINK_LIBRARIES = -lWs2_32  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\SO2_P2.dir
   POST_BUILD = cd .
   PRE_LINK = cd .

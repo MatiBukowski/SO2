@@ -3,12 +3,13 @@
 //
 #include <iostream>
 #include <conio.h>
+#include <connection.h>
 
 using namespace std;
 
 int main()                  // głowna funkcja programu
 {
-
+    main_socket_server_connection();
     getch();
     return 0;
 }
