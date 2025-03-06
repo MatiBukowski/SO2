@@ -30,16 +30,19 @@ namespace client {
         serverAddress.sin_addr.s_addr = inet_addr("127.0.0.1");
 
         try {
-            connect(clientSocket, (struct sockaddr *) &serverAddress, sizeof(serverAddress));
+            ::connect(clientSocket, (struct sockaddr *) &serverAddress, sizeof(serverAddress));
         } catch (...) {
             cout << "Client's connection failed!" << endl;
             WSACleanup();
             return;
         }
 
+        cout << "Connected to server!" << endl;
 
-        const char *message = "Hello, I am client!";
+        // Sending Message to Server
+        const char* message = "Hello, I am the client!";
         send(clientSocket, message, strlen(message), 0);
+        cout << "Message sent to server!" << endl;
 
         closesocket(clientSocket);
         WSACleanup();
