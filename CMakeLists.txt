@@ -11,8 +11,8 @@ include_directories(${PROJECT_SOURCE_DIR}/Project_2/Headers)
 add_executable(SO2_P1 Project_1/Sources/main.cpp
         Project_1/Sources/philoProblem.cpp
         Project_1/Sources/philoProblem2.cpp)
+
 add_executable(SO2_P2 Project_2/Sources/main2.cpp
-        Project_2/Sources/connection.cpp
         Project_2/Sources/server.cpp
         Project_2/Headers/server.h
         Project_2/Sources/client.cpp

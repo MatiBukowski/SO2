@@ -5,6 +5,8 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
-void client_socket_connection();
+namespace client {
+    void connect();
+}
 
 #endif //CLIENT_H

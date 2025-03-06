@@ -5,6 +5,13 @@
 #ifndef SERVER_H
 #define SERVER_H
 
-void server_connection();
+namespace server {
+    // Starts the server
+    void start();
+    // Listening on desired port
+    void listen();
+    // Stops the server from running
+    void stop();
+}
 
 #endif //SERVER_H
