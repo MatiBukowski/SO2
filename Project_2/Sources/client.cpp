@@ -27,11 +27,11 @@ namespace client {
         sockaddr_in serverAddress;
         serverAddress.sin_family = AF_INET;
         serverAddress.sin_port = htons(8080);
-        serverAddress.sin_addr.s_addr = INADDR_ANY;
+        serverAddress.sin_addr.s_addr = inet_addr("127.0.0.1");
 
         try {
             connect(clientSocket, (struct sockaddr *) &serverAddress, sizeof(serverAddress));
-        } catch (exception &e) {
+        } catch (...) {
             cout << "Client's connection failed!" << endl;
             WSACleanup();
             return;

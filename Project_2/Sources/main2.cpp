@@ -6,9 +6,8 @@ using namespace std;
 
 int main() {
     server::start();
-    server::listen();
-
     thread t1(client::connect);
+    server::listen();
 
     server::stop();
     return 0;
