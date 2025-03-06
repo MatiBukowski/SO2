@@ -65,19 +65,30 @@ namespace server {
 
         if (clientSocket == INVALID_SOCKET) {
             send_error_message(ACCEPT_FAILURE);
-            server::stop();
+            stop();
             return;
         }
 
-        cout << "Client connected!" << endl;
+        cout << "Client connected!" << endl << endl;
 
-        // Receiving Data
-        char buffer[1024] = {0}; // Buffer to store received data
-        int bytesReceived = recv(clientSocket, buffer, sizeof(buffer), 0);
-        if (bytesReceived > 0) {
+        char buffer[1024];
+
+        while (true) {
+            // Cleaning buffer
+            memset(buffer, 0, sizeof(buffer));
+            int bytesReceived = recv(clientSocket, buffer, sizeof(buffer) - 1, 0);
+
+            if (bytesReceived < 0) {
+                cout << "Error receiving message from client!" << endl;
+                break;
+            }
+
+            string bufferString(buffer);
+            bufferString.erase(bufferString.find_last_not_of("\r\n")+1);
+
+            if (bufferString == "exit") break;
+
             cout << "Message from client: " << buffer << endl;
-        } else {
-            cout << "Error receiving message from client!" << endl;
         }
 
         closesocket(clientSocket);
@@ -86,6 +97,10 @@ namespace server {
 
 int main() {
     server::start();
-    server::listen();
+
+    thread t_listen(server::listen);
+
+    t_listen.join();
     server::stop();
+
 }
