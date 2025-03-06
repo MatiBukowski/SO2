@@ -6,6 +6,7 @@
 using namespace std;
 
 namespace server {
+    void client_connection(int);
     int serverSocket;
 
     void stop() {
@@ -59,18 +60,24 @@ namespace server {
             return;
         }
 
-        // Accepting a client connection
-        // used to accept the connection request that is recieved on the socket the application was listening to
-        int clientSocket = accept(serverSocket, nullptr, nullptr);
+        // // Accepting a client connection
+        // // used to accept the connection request that is recieved on the socket the application was listening to
+        while(true) {
+            int clientSocket = accept(serverSocket, nullptr, nullptr);
 
-        if (clientSocket == INVALID_SOCKET) {
-            send_error_message(ACCEPT_FAILURE);
-            stop();
-            return;
+            if (clientSocket == INVALID_SOCKET) {
+                send_error_message(ACCEPT_FAILURE);
+                // server::stop();
+                // return;
+                continue;
+            }
+
+            cout << "Client connected!" << endl;
+            thread(client_connection, clientSocket).detach();
         }
+    }
 
-        cout << "Client connected!" << endl << endl;
-
+    void client_connection(int clientSocket) {
         char buffer[1024];
 
         while (true) {
@@ -103,4 +110,5 @@ int main() {
     t_listen.join();
     server::stop();
 
+    return 0;
 }

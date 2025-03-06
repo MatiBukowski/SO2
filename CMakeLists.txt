@@ -18,5 +18,7 @@ add_executable(Server Project_2/Server/main.cpp
 add_executable(Client Project_2/Client/main.cpp
         Project_2/Constants.cpp)
 
+add_executable(SO2_P2 Project_2/startup.cpp)
+
 target_link_libraries(Server PRIVATE Ws2_32)                # linking library Ws2_32 to use socket's function in Windows API
 target_link_libraries(Client PRIVATE Ws2_32)                # linking library Ws2_32 to use socket's function in Windows API
