@@ -111,6 +111,20 @@ build CMakeFiles/SO2_P2.dir/Project_2/Sources/connection.cpp.obj: CXX_COMPILER__
   OBJECT_DIR = CMakeFiles\SO2_P2.dir
   OBJECT_FILE_DIR = CMakeFiles\SO2_P2.dir\Project_2\Sources
 
+build CMakeFiles/SO2_P2.dir/Project_2/Sources/server.cpp.obj: CXX_COMPILER__SO2_P2_unscanned_Debug C$:/Users/mateu/CLionProjects/SO2/Project_2/Sources/server.cpp || cmake_object_order_depends_target_SO2_P2
+  DEP_FILE = CMakeFiles\SO2_P2.dir\Project_2\Sources\server.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/mateu/CLionProjects/SO2/Project_1/Headers -IC:/Users/mateu/CLionProjects/SO2/Project_2/Headers
+  OBJECT_DIR = CMakeFiles\SO2_P2.dir
+  OBJECT_FILE_DIR = CMakeFiles\SO2_P2.dir\Project_2\Sources
+
+build CMakeFiles/SO2_P2.dir/Project_2/Sources/client.cpp.obj: CXX_COMPILER__SO2_P2_unscanned_Debug C$:/Users/mateu/CLionProjects/SO2/Project_2/Sources/client.cpp || cmake_object_order_depends_target_SO2_P2
+  DEP_FILE = CMakeFiles\SO2_P2.dir\Project_2\Sources\client.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/mateu/CLionProjects/SO2/Project_1/Headers -IC:/Users/mateu/CLionProjects/SO2/Project_2/Headers
+  OBJECT_DIR = CMakeFiles\SO2_P2.dir
+  OBJECT_FILE_DIR = CMakeFiles\SO2_P2.dir\Project_2\Sources
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target SO2_P2
@@ -119,7 +133,7 @@ build CMakeFiles/SO2_P2.dir/Project_2/Sources/connection.cpp.obj: CXX_COMPILER__
 #############################################
 # Link the executable SO2_P2.exe
 
-build SO2_P2.exe: CXX_EXECUTABLE_LINKER__SO2_P2_Debug CMakeFiles/SO2_P2.dir/Project_2/Sources/main2.cpp.obj CMakeFiles/SO2_P2.dir/Project_2/Sources/connection.cpp.obj
+build SO2_P2.exe: CXX_EXECUTABLE_LINKER__SO2_P2_Debug CMakeFiles/SO2_P2.dir/Project_2/Sources/main2.cpp.obj CMakeFiles/SO2_P2.dir/Project_2/Sources/connection.cpp.obj CMakeFiles/SO2_P2.dir/Project_2/Sources/server.cpp.obj CMakeFiles/SO2_P2.dir/Project_2/Sources/client.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lWs2_32  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\SO2_P2.dir
