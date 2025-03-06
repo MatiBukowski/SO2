@@ -1,9 +1,5 @@
-//
-// Created by mateu on 06.03.2025.
-//
 #include <iostream>
 #include <winsock2.h>
-#include <client.h>
 #include <thread>
 
 using namespace std;
@@ -47,4 +43,8 @@ namespace client {
         closesocket(clientSocket);
         WSACleanup();
     }
+}
+
+int main() {
+    client::connect();
 }
