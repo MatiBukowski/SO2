@@ -12,9 +12,9 @@ void clinet_socket_connection();
 
 void main_socket_server_connection() {
     thread client(clinet_socket_connection);
-    WSADATA wsaData;                                    // before using windows socket we have to initialize this function
+    WSADATA wsaData;                                    // before using windows socket we have to initialize this function. It is used to initialized Windows Socket API
     if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
-        cerr << "WSAStartup failed!" << endl;
+        cout << "WSAStartup failed!" << endl;
         return;
     }
 
@@ -24,7 +24,7 @@ void main_socket_server_connection() {
     int serverSocket = socket(AF_INET, SOCK_STREAM, 0);         // AF_INET - IPv4 protocol family, SOCK_STREAM - TCP type socket
 
     if (serverSocket == INVALID_SOCKET) {
-        cerr << "Socket creation failed!" << endl;
+        cout << "Socket creation failed!" << endl;
         WSACleanup();
         return;
     }
@@ -39,7 +39,7 @@ void main_socket_server_connection() {
     // Binding the server socket
     try {
         bind(serverSocket, (struct sockaddr*)&serverAddress, sizeof(serverAddress));
-    } catch (exception& e) {
+    } catch (...) {
         cout << "Bind failed!" << endl;
         closesocket(serverSocket);
         WSACleanup();
@@ -49,7 +49,7 @@ void main_socket_server_connection() {
     // Listening for connections
     try {
         listen(serverSocket, 5);                                            // 5 - max amount od devices waiting for connection, application listen to the socket referred by the serverSocket
-    } catch (exception& e) {
+    } catch (...) {
         cout << "Listen failed!" << endl;
         closesocket(serverSocket);
         WSACleanup();
@@ -60,12 +60,13 @@ void main_socket_server_connection() {
     int clientSocket = accept(serverSocket, nullptr, nullptr);      // used to accept the connection request that is recieved on the socket the application was listening to
 
     if(clientSocket == INVALID_SOCKET) {
-        cerr << "Accept failed!" << endl;
+        cout << "Accept failed!" << endl;
         closesocket(serverSocket);
         WSACleanup();
         return;
     }
 
+    cout << "Tak";
     // Receiving Data from the Client
     char buffer[1024] = {0};
     recv(clientSocket, buffer, sizeof(buffer), 0);
@@ -80,7 +81,7 @@ void main_socket_server_connection() {
 void clinet_socket_connection() {
     WSADATA wsaData;
     if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
-        cerr << "WSAStartup failed!" << endl;
+        cout << "WSAStartup failed!" << endl;
         return;
     }
 
