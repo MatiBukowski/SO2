@@ -55,13 +55,15 @@ namespace server {
     }
 
     void listen() {
-        try {
-            // 5 - max amount od devices waiting for connection, application listen to the socket referred by the serverSocket
-            ::listen(serverSocket, 5);
-        } catch (...) {
-            send_error_message(LISTEN_FAILURE);
-            server::stop();
-            return;
+        while(true) {
+            try {
+                // 5 - max amount od devices waiting for connection, application listen to the socket referred by the serverSocket
+                ::listen(serverSocket, 5);
+            } catch (...) {
+                send_error_message(LISTEN_FAILURE);
+                server::stop();
+                return;
+            }
         }
     }
 
@@ -111,7 +113,7 @@ namespace server {
     void start() {
         server::bind();
         thread t_listen(server::listen);
-        server::accept();
+        thread t_accept(server::accept);
     }
 
 }

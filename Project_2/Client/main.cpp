@@ -43,6 +43,11 @@ namespace client {
         // display_mutex.unlock();
     }
 
+    void stop() {
+        closesocket(clientSocket);
+        WSACleanup();
+    }
+
     void send_message() {
         // Sending Message to Server
         string message_str;
@@ -66,26 +71,26 @@ namespace client {
         }
     }
 
-    void stop() {
-        closesocket(clientSocket);
-        WSACleanup();
-    }
-
     void receive_messages() {
         char buffer[1024];
 
-        while (true) {
+        while(true) {
             memset(buffer, 0, sizeof(buffer));
-            int bytesReceived = recv(clientSocket, buffer, sizeof(buffer) - 1, 0);
 
-            if (bytesReceived < 0) {
-                cout << "Error receiving message from client!" << endl;
-                break;
-            }
+            try {
+                int bytesReceived = recv(clientSocket, buffer, sizeof(buffer) - 1, 0);
 
-            displayMutex.lock();
-            cout << "Message from different client: " << buffer << endl;
-            displayMutex.unlock();
+                if(bytesReceived > 0) {
+                    displayMutex.lock();
+                    cout << "Message from different client: " << buffer << endl;
+                    displayMutex.unlock();
+                }
+            } catch (...) {cout << "TakCatch";}
+
+            // if (bytesReceived < 0) {
+            //     cout << "Error receiving message from client!" << endl;
+            //     break;
+            // }
         }
     }
 }
@@ -93,9 +98,9 @@ namespace client {
 int main() {
     client::connect();
     thread t_send(client::send_message);
-    thread t_receive(client::receive_messages);
+    thread (client::receive_messages).detach();
+
     t_send.join();
-    t_receive.join();
     client::stop();
     return 0;
 }
