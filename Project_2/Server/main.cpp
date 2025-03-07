@@ -8,9 +8,9 @@ using namespace std;
 
 namespace server {
     void read(int);
-
     void send(int);
 
+    mutex sendMutex;
     mutex displayMutex;
     int serverSocket;
     vector<int> clientSockets;
@@ -89,11 +89,13 @@ namespace server {
     }
 
     void send(int clientSocket, const char *message) {
+        sendMutex.lock();
         for (int i = 0; i < clientSockets.size(); i++) {
             if (clientSockets.at(i) != clientSocket) {
                 ::send(clientSockets.at(i), message, strlen(message), 0);
             }
         }
+        sendMutex.unlock();
     }
 
     void read(int clientSocket) {
