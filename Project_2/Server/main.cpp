@@ -7,10 +7,10 @@
 using namespace std;
 
 namespace server {
-    void client_connection(int);
-    mutex displayMutex;
-    vector<int> clients;
+    void read(int);
+    void send(int);
 
+    mutex displayMutex;
     int serverSocket;
 
     void stop() {
@@ -18,7 +18,7 @@ namespace server {
         WSACleanup();
     }
 
-    void start() {
+    void bind() {
         // before using windows socket we have to initialize this function. It is used to initialized Windows Socket API
         WSADATA wsaData;
         if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
@@ -63,68 +63,61 @@ namespace server {
             server::stop();
             return;
         }
+    }
 
-        // // Accepting a client connection
-        // // used to accept the connection request that is recieved on the socket the application was listening to
+    void accept(){
+        // Accepting a client connection
+        // used to accept the connection request that is recieved on the socket the application was listening to
         while(true) {
-            int clientSocket = accept(serverSocket, nullptr, nullptr);
+            int clientSocket = ::accept(serverSocket, nullptr, nullptr);
 
             if (clientSocket == INVALID_SOCKET) {
                 send_error_message(ACCEPT_FAILURE);
                 continue;
             }
 
-            clients.push_back(clientSocket);
-
             cout << "Client connected!" << endl;
-            thread(client_connection, clientSocket).detach();
+            thread(read, clientSocket).detach();
         }
     }
 
-    void send_to_all(string message_str){
-        const char* message;
-        for(int i=0; i<clients.size(); i++) {
-            message = message_str.c_str();                                      // convert string to const char*
-            send(clients.at(i), message, strlen(message), 0);
-        }
+    void send(int clientSocket, const char* message){
+        int bytesSent;
+        char sendbuf[ 32 ] = "Client says hello!";
+        cout << "bump" << endl;
+        ::send(clientSocket, message, strlen(message), 0);
     }
 
-    void client_connection(int clientSocket) {
-        char buffer[1024];
+    void read(int clientSocket) {
+        int bytesRecv = SOCKET_ERROR;
+        char recvbuf[ 32 ] = "";
 
-        while (true) {
-            // Cleaning buffer
-            memset(buffer, 0, sizeof(buffer));
-            int bytesReceived = recv(clientSocket, buffer, sizeof(buffer) - 1, 0);
+        while( bytesRecv == SOCKET_ERROR )
+        {
+            bytesRecv = recv( clientSocket, recvbuf, 32, 0 );
 
-            if (bytesReceived < 0) {
-                cout << "Error receiving message from client!" << endl;
+            if( bytesRecv == 0 || bytesRecv == WSAECONNRESET ){
                 break;
             }
 
-            string bufferString(buffer);
-            bufferString.erase(bufferString.find_last_not_of("\r\n")+1);
+            if( bytesRecv < 0 )
+                return;
 
-            if (bufferString == "exit") break;
-
-            displayMutex.lock();
-            cout << "Message from client: " << buffer << endl;
-            send_to_all(buffer);
-            displayMutex.unlock();
+            cout << recvbuf << endl;
         }
 
-        closesocket(clientSocket);
+    }
+
+    void start() {
+        server::bind();
+        thread t_listen(server::listen);
+        server::accept();
     }
 
 }
 
 int main() {
     server::start();
-
-    thread t_listen(server::listen);
-
-    t_listen.join();
     server::stop();
-
     return 0;
 }
