@@ -69,8 +69,6 @@ namespace server {
 
             if (clientSocket == INVALID_SOCKET) {
                 send_error_message(ACCEPT_FAILURE);
-                // server::stop();
-                // return;
                 continue;
             }
 

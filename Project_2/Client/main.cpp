@@ -7,7 +7,8 @@
 using namespace std;
 
 namespace client {
-    mutex display_mutex;
+    int clientSocket;
+    mutex displayMutex;
 
     void connect() {
         WSADATA wsaData;
@@ -16,7 +17,7 @@ namespace client {
             return;
         }
 
-        int clientSocket = socket(AF_INET, SOCK_STREAM, 0);
+        clientSocket = socket(AF_INET, SOCK_STREAM, 0);
         if (clientSocket == INVALID_SOCKET) {
             cout << "Client's socket creation failed!" << endl;
             WSACleanup();
@@ -37,10 +38,12 @@ namespace client {
             return;
         }
 
-        display_mutex.lock();
+        // display_mutex.lock();
         cout << "Client connected to server!" << endl;
-        display_mutex.unlock();
+        // display_mutex.unlock();
+    }
 
+    void send_message() {
         // Sending Message to Server
         string message_str;
         const char* message;
@@ -61,12 +64,38 @@ namespace client {
             message = message_str.c_str();                                          // convert string to const char*
             send(clientSocket, message, strlen(message), 0);
         }
+    }
 
+    void stop() {
         closesocket(clientSocket);
         WSACleanup();
+    }
+
+    void receive_messages() {
+        char buffer[1024];
+
+        while (true) {
+            memset(buffer, 0, sizeof(buffer));
+            int bytesReceived = recv(clientSocket, buffer, sizeof(buffer) - 1, 0);
+
+            if (bytesReceived < 0) {
+                cout << "Error receiving message from client!" << endl;
+                break;
+            }
+
+            displayMutex.lock();
+            cout << "Message from different client: " << buffer << endl;
+            displayMutex.unlock();
+        }
     }
 }
 
 int main() {
     client::connect();
+    thread t_send(client::send_message);
+    thread t_receive(client::receive_messages);
+    t_send.join();
+    t_receive.join();
+    client::stop();
+    return 0;
 }

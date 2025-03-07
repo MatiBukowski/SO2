@@ -11,7 +11,7 @@ void startup() {
     cin.ignore();
 
     for (int i = 0; i < num_of_clients; i++) {
-        string command = "start cmd /k client.exe " + to_string(i + 1);
+        string command = "start cmd /k Client.exe " + to_string(i + 1);
         system(command.c_str());
     }
 }
