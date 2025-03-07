@@ -2,6 +2,7 @@
 #include <winsock2.h>
 #include <thread>
 #include <vector>
+#include <map>
 #include "Constants.cpp"
 
 using namespace std;
@@ -13,7 +14,9 @@ namespace server {
     mutex sendMutex;
     mutex displayMutex;
     int serverSocket;
-    vector<int> clientSockets;
+
+    int counter = 1;
+    std::map<int, string> clientMap = {};
 
     void stop() {
         closesocket(serverSocket);
@@ -82,7 +85,10 @@ namespace server {
 
             cout << "Client connected!" << endl;
 
-            clientSockets.push_back(clientSocket);
+            //clientSockets.push_back(clientSocket);
+
+            clientMap.insert({clientSocket, "user " + to_string(counter)});
+            counter++;
 
             thread(read, clientSocket).detach();
         }
@@ -90,9 +96,10 @@ namespace server {
 
     void send(int clientSocket, const char *message) {
         sendMutex.lock();
-        for (int i = 0; i < clientSockets.size(); i++) {
-            if (clientSockets.at(i) != clientSocket) {
-                ::send(clientSockets.at(i), message, strlen(message), 0);
+        for (auto client : clientMap) {
+            if (client.first != clientSocket) {
+                std::string messageCopy = clientMap[clientSocket] + ": " + message;  // Use std::string
+                ::send(client.first, messageCopy.c_str(), messageCopy.length(), 0);
             }
         }
         sendMutex.unlock();
@@ -113,7 +120,8 @@ namespace server {
                 if (bytesRecv < 0)
                     return;
 
-                cout << recvbuf << endl;
+                auto user = clientMap[clientSocket];
+                cout << user << ": " << recvbuf << endl;
 
                 send(clientSocket, recvbuf);
             }

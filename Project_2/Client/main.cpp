@@ -82,7 +82,7 @@ namespace client {
 
                 if(bytesReceived > 0) {
                     displayMutex.lock();
-                    cout << "Message from different client: " << buffer << endl;
+                    cout << buffer << endl;
                     displayMutex.unlock();
                 }
             } catch (...) {cout << "TakCatch";}
