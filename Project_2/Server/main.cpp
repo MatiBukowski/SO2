@@ -1,6 +1,7 @@
 #include <iostream>
 #include <winsock2.h>
 #include <thread>
+#include <vector>
 #include "Constants.cpp"
 
 using namespace std;
@@ -8,6 +9,7 @@ using namespace std;
 namespace server {
     void client_connection(int);
     mutex displayMutex;
+    vector<int> clients;
 
     int serverSocket;
 
@@ -72,8 +74,18 @@ namespace server {
                 continue;
             }
 
+            clients.push_back(clientSocket);
+
             cout << "Client connected!" << endl;
             thread(client_connection, clientSocket).detach();
+        }
+    }
+
+    void send_to_all(string message_str){
+        const char* message;
+        for(int i=0; i<clients.size(); i++) {
+            message = message_str.c_str();                                      // convert string to const char*
+            send(clients.at(i), message, strlen(message), 0);
         }
     }
 
@@ -97,11 +109,13 @@ namespace server {
 
             displayMutex.lock();
             cout << "Message from client: " << buffer << endl;
+            send_to_all(buffer);
             displayMutex.unlock();
         }
 
         closesocket(clientSocket);
     }
+
 }
 
 int main() {
