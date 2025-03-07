@@ -68,23 +68,5 @@ namespace client {
 }
 
 int main() {
-    // int num_of_clients = 0;
-    // vector<thread> clients;
-    //
-    // cout << "Set number of clients: ";
-    // cin >> num_of_clients;
-    // cin.ignore();
-    //
-    // for(int i = 0; i < num_of_clients; i++) {
-    //     // clients.emplace_back(client::connect, i+1);
-    //     string command = "start cmd /k client.exe " + to_string(i + 1);
-    //     system(command.c_str());
-    // }
-    //
-    // for (thread &t : clients) {
-    //     t.join();
-    // }
-    //
-    // return 0;
     client::connect();
 }

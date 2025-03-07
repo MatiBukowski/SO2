@@ -7,6 +7,8 @@ using namespace std;
 
 namespace server {
     void client_connection(int);
+    mutex displayMutex;
+
     int serverSocket;
 
     void stop() {
@@ -95,7 +97,9 @@ namespace server {
 
             if (bufferString == "exit") break;
 
+            displayMutex.lock();
             cout << "Message from client: " << buffer << endl;
+            displayMutex.unlock();
         }
 
         closesocket(clientSocket);
