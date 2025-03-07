@@ -17,6 +17,9 @@ namespace server {
 
     int counter = 1;
     std::map<int, string> clientMap = {};
+    std::map<int, int> clientColorMap = {};
+
+
 
     void stop() {
         closesocket(serverSocket);
@@ -24,6 +27,7 @@ namespace server {
     }
 
     void bind() {
+
         // before using windows socket we have to initialize this function. It is used to initialized Windows Socket API
         WSADATA wsaData;
         if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
@@ -83,12 +87,15 @@ namespace server {
                 continue;
             }
 
-            cout << "Client connected!" << endl;
-
             //clientSockets.push_back(clientSocket);
 
             clientMap.insert({clientSocket, "user " + to_string(counter)});
             counter++;
+
+            clientColorMap.insert({clientSocket, counter});
+
+            auto user = clientMap[clientSocket];
+            cout << user << " connected" << endl;
 
             thread(read, clientSocket).detach();
         }
@@ -98,7 +105,7 @@ namespace server {
         sendMutex.lock();
         for (auto client : clientMap) {
             if (client.first != clientSocket) {
-                std::string messageCopy = clientMap[clientSocket] + ": " + message;  // Use std::string
+                string messageCopy = clientMap[clientSocket] + ": " + message;
                 ::send(client.first, messageCopy.c_str(), messageCopy.length(), 0);
             }
         }
@@ -106,6 +113,9 @@ namespace server {
     }
 
     void read(int clientSocket) {
+        HANDLE console_color;                               // console handler for text's color change
+        console_color = GetStdHandle(STD_OUTPUT_HANDLE);
+
         while (true) {
             int bytesRecv = SOCKET_ERROR;
             char recvbuf[32] = "";
@@ -120,8 +130,13 @@ namespace server {
                 if (bytesRecv < 0)
                     return;
 
+                int color = clientColorMap[clientSocket];
+                SetConsoleTextAttribute(console_color, color);              // set color
+
                 auto user = clientMap[clientSocket];
                 cout << user << ": " << recvbuf << endl;
+
+                SetConsoleTextAttribute(console_color, 15);        // set white color back
 
                 send(clientSocket, recvbuf);
             }

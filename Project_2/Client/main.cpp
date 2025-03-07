@@ -40,6 +40,7 @@ namespace client {
 
         // display_mutex.lock();
         cout << "Client connected to server!" << endl;
+        cout << "Chat:" << endl << endl;
         // display_mutex.unlock();
     }
 
@@ -72,6 +73,10 @@ namespace client {
     }
 
     void receive_messages() {
+        HANDLE console_color;                               // console handler for text's color change
+        console_color = GetStdHandle(STD_OUTPUT_HANDLE);
+
+
         char buffer[1024];
 
         while(true) {
@@ -81,16 +86,16 @@ namespace client {
                 int bytesReceived = recv(clientSocket, buffer, sizeof(buffer) - 1, 0);
 
                 if(bytesReceived > 0) {
+                    int color = buffer[5] - '0' + 1;                                  // user number (covert to int) + 1 (like in server)
+                    SetConsoleTextAttribute(console_color, color);                    // set color
+
                     displayMutex.lock();
                     cout << buffer << endl;
                     displayMutex.unlock();
-                }
-            } catch (...) {cout << "TakCatch";}
 
-            // if (bytesReceived < 0) {
-            //     cout << "Error receiving message from client!" << endl;
-            //     break;
-            // }
+                    SetConsoleTextAttribute(console_color, 15);             // set white color back
+                }
+            } catch (...) {}
         }
     }
 }
