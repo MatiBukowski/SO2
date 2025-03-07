@@ -8,10 +8,12 @@ using namespace std;
 
 namespace server {
     void read(int);
+
     void send(int);
 
     mutex displayMutex;
     int serverSocket;
+    vector<int> clientSockets;
 
     void stop() {
         closesocket(serverSocket);
@@ -55,7 +57,7 @@ namespace server {
     }
 
     void listen() {
-        while(true) {
+        while (true) {
             try {
                 // 5 - max amount od devices waiting for connection, application listen to the socket referred by the serverSocket
                 ::listen(serverSocket, 5);
@@ -67,10 +69,10 @@ namespace server {
         }
     }
 
-    void accept(){
+    void accept() {
         // Accepting a client connection
         // used to accept the connection request that is recieved on the socket the application was listening to
-        while(true) {
+        while (true) {
             int clientSocket = ::accept(serverSocket, nullptr, nullptr);
 
             if (clientSocket == INVALID_SOCKET) {
@@ -79,33 +81,40 @@ namespace server {
             }
 
             cout << "Client connected!" << endl;
+
+            clientSockets.push_back(clientSocket);
+
             thread(read, clientSocket).detach();
         }
     }
 
-    void send(int clientSocket, const char* message){
-        int bytesSent;
-        char sendbuf[ 32 ] = "Client says hello!";
-        cout << "bump" << endl;
-        ::send(clientSocket, message, strlen(message), 0);
+    void send(int clientSocket, const char *message) {
+        for (int i = 0; i < clientSockets.size(); i++) {
+            if (clientSockets.at(i) != clientSocket) {
+                ::send(clientSockets.at(i), message, strlen(message), 0);
+            }
+        }
     }
 
     void read(int clientSocket) {
-        int bytesRecv = SOCKET_ERROR;
-        char recvbuf[ 32 ] = "";
+        while (true) {
+            int bytesRecv = SOCKET_ERROR;
+            char recvbuf[32] = "";
 
-        while( bytesRecv == SOCKET_ERROR )
-        {
-            bytesRecv = recv( clientSocket, recvbuf, 32, 0 );
+            while (bytesRecv == SOCKET_ERROR) {
+                bytesRecv = recv(clientSocket, recvbuf, 32, 0);
 
-            if( bytesRecv == 0 || bytesRecv == WSAECONNRESET ){
-                break;
+                if (bytesRecv == 0 || bytesRecv == WSAECONNRESET) {
+                    break;
+                }
+
+                if (bytesRecv < 0)
+                    return;
+
+                cout << recvbuf << endl;
+
+                send(clientSocket, recvbuf);
             }
-
-            if( bytesRecv < 0 )
-                return;
-
-            cout << recvbuf << endl;
         }
 
     }
@@ -114,6 +123,8 @@ namespace server {
         server::bind();
         thread t_listen(server::listen);
         thread t_accept(server::accept);
+        t_listen.join();
+        t_accept.join();
     }
 
 }
