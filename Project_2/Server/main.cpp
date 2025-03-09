@@ -95,7 +95,9 @@ namespace server {
             clientColorMap.insert({clientSocket, counter});
 
             auto user = clientMap[clientSocket];
+            displayMutex.lock();
             cout << user << " connected" << endl;
+            displayMutex.unlock();
 
             thread(read, clientSocket).detach();
         }
@@ -121,6 +123,7 @@ namespace server {
             char recvbuf[32] = "";
 
             while (bytesRecv == SOCKET_ERROR) {
+
                 bytesRecv = recv(clientSocket, recvbuf, 32, 0);
 
                 if (bytesRecv == 0 || bytesRecv == WSAECONNRESET) {
@@ -134,14 +137,15 @@ namespace server {
                 SetConsoleTextAttribute(console_color, color);              // set color
 
                 auto user = clientMap[clientSocket];
+                displayMutex.lock();
                 cout << user << ": " << recvbuf << endl;
+                displayMutex.unlock();
 
                 SetConsoleTextAttribute(console_color, 15);        // set white color back
 
                 send(clientSocket, recvbuf);
             }
         }
-
     }
 
     void start() {
