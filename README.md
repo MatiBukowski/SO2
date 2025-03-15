@@ -41,5 +41,5 @@ Aby uruchomić projekt, należy wykonać następujące kroki:
 1. w zakładce "Run / Debug Configurations" należy wybrać konfigurację __Server__, a następnie wcisnąc przycisk __Run__.
 2. Po uruchomieniu serwera, w zakładce "Run / Debug Configurations" należy wybrać konfigurację __SO2_P2__, a następnie wcisnąc przycisk __Run__.
 3. Po uruchomieniu konfiguracji __SO2_P2__ wyskoczy okno terminala, w którym należy podać ilość klientów łączących się z serwerm chatu.
-4. Po podaniu liczby klientów, uruchamiana jest podana liczbą plików __Client.exe__ w osobnych terminalach - łączą się oni z serwerem i mogą między sobą konwersować.
+4. Po podaniu liczby klientów, uruchamiana jest podana liczba plików __Client.exe__ w osobnych terminalach - łączą się oni z serwerem i mogą między sobą konwersować.
 
